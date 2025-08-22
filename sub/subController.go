@@ -75,7 +75,7 @@ func (a *SUBController) subs(c *gin.Context) {
 	}
 	subs, header, err := a.subService.GetSubs(subId, host)
 	if err != nil || len(subs) == 0 {
-		c.String(400, "Error!")
+		c.String(400, err.Error())
 	} else {
 		result := ""
 		for _, sub := range subs {

@@ -582,8 +582,8 @@
 
 [tgbot.commands]
 "unknown" = "❗ Unknown command."
-"pleaseChoose" = "👇 Please choose:\r\n"
 "help" = "🤖 Welcome to this bot! It's designed to offer specific data from the web panel and allows you to make modifications as needed.\r\n\r\n"
+"pleaseChoose" = "👇 Please choose platform to get the guide:\r\n"
 "start" = "👋 Hello <i>{{ .Firstname }}</i>.\r\n"
 "welcome" = "🤖 Welcome to <b>{{ .Hostname }}</b> management bot.\r\n"
 "status" = "✅ Bot is OK!"
@@ -664,6 +664,8 @@
 "SuccessResetTraffic" = "📧 Email: {{ .ClientEmail }}\n🏁 Result: ✅ Success"
 "FailedResetTraffic" = "📧 Email: {{ .ClientEmail }}\n🏁 Result: ❌ Failed \n\n🛠️ Error: [ {{ .ErrorMessage }} ]"
 "FinishProcess" = "🔚 Traffic reset process finished for all clients."
+"client_connected_successfully" = "✅ Connected successfully. Your sub link:"
+"code_block" = "<code>{{ .Content }}</code>"
 
 [tgbot.buttons]
 "closeKeyboard" = "❌ Close Keyboard"
@@ -679,6 +681,11 @@
 "getInbounds" = "Get Inbounds"
 "depleteSoon" = "Deplete Soon"
 "clientUsage" = "Get Usage"
+"clientConnect" = "Connect to service 🌐"
+"ios_guide" = "iOS "
+"android_guide" = "Android 🤖"
+"macos_guide" = "macOS 🍏"
+"windows_guide" = "Windows 🪟"
 "onlines" = "Online Clients"
 "commands" = "Commands"
 "refresh" = "🔄 Refresh"

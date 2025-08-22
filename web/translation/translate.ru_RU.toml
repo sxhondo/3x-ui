@@ -582,9 +582,19 @@
 
 [tgbot.commands]
 "unknown" = "❗ Неизвестная команда"
+"start" = """👋 Привет, {{ .Firstname }}!
+Этот бот поможет подключиться к xray-сервису.
+Выполните команду /help, чтобы получить подробную инструкцию по подключению
+"""
+"help" = """🤖 Чтобы подключиться к сервису:
+1. Установите приложение v2ray на своё устройство.
+2. В боте нажмите кнопку «Подключиться» и получите ссылку.
+3. Вставьте ссылку в приложение v2ray и подключитесь.
+
+📺 Ниже доступны видеоинструкции и ссылки для скачивания приложения в зависимости от вашей платформы.
+❓ Если возникнут вопросы — пишите мне: @sxhondo
+"""
 "pleaseChoose" = "👇 Пожалуйста, выберите:\r\n"
-"help" = "🤖 Добро пожаловать! Этот бот предназначен для предоставления вам данных с сервера и позволяет вносить изменения на него.\r\n\r\n"
-"start" = "👋 Привет, <i>{{ .Firstname }}</i>.\r\n"
 "welcome" = "🤖 Добро пожаловать в бота управления <b>{{ .Hostname }}</b>!\r\n"
 "status" = "✅ Бот функционирует нормально."
 "usage" = "❗ Пожалуйста, укажите email для поиска."
@@ -654,6 +664,7 @@
 "pass_prompt" = "🔑 Стандартный пароль: {{ .ClientPassword }}\n\nВведите ваш пароль."
 "email_prompt" = "📧 Стандартный email: {{ .ClientEmail }}\n\nВведите ваш email."
 "comment_prompt" = "💬 Стандартный комментарий: {{ .ClientComment }}\n\nВведите ваш комментарий."
+"client_wait_email_prompt" = "📧 Введите ваше email:"
 "inbound_client_data_id" = "🔄 Инбаунды: {{ .InboundRemark }}\n\n🔑 ID: {{ .ClientId }}\n📧 Email: {{ .ClientEmail }}\n📊 Трафик: {{ .ClientTraffic }}\n📅 Дата исчерпания: {{ .ClientExp }}\n💬 Комментарий: {{ .ClientComment }}\n\nТеперь вы можете добавить клиента в инбаунд!"
 "inbound_client_data_pass" = "🔄 Инбаунды: {{ .InboundRemark }}\n\n🔑 Пароль: {{ .ClientPass }}\n📧 Email: {{ .ClientEmail }}\n📊 Трафик: {{ .ClientTraffic }}\n📅 Дата исчерпания: {{ .ClientExp }}\n💬 Комментарий: {{ .ClientComment }}\n\nТеперь вы можете добавить клиента в инбаунд!"
 "cancel" = "❌ Процесс отменён! \n\nВы можете снова начать с /start в любое время. 🔄"
@@ -664,6 +675,19 @@
 "SuccessResetTraffic" = "📧 Почта: {{ .ClientEmail }}\n🏁 Результат: ✅ Успешно"
 "FailedResetTraffic" = "📧 Почта: {{ .ClientEmail }}\n🏁 Результат: ❌ Неудача \n\n🛠️ Ошибка: [ {{ .ErrorMessage }} ]"
 "FinishProcess" = "🔚 Сброс трафика завершён для всех клиентов."
+"client_connected_successfully" = "✅ Вы успешно подключены"
+"code_block" = "<code>{{ .Content }}</code>"
+"prompt_notify_message" = "Введите сообщение для рассылки: "
+
+[tgbot.media]
+"ios_guide_fileID" = "BAACAgIAAxkBAAIbuWiofDYyD2ZeVMmvFJe9U0ZD4ZyeAAJneAACjUxISYTnXQ1zCahZNgQ"
+"ios_guide_caption" = "Ссылка на приложение: https://apps.apple.com/us/app/v2raytun/id6476628951"
+"android_guide_fileID" = "fileID"
+"android_guide_caption" = "caption"
+"macOS_guide_fileID" = "fileID"
+"macOS_guide_caption" = "caption"
+"windows_guide_fileID" = "fileID"
+"windows_guide_caption" = "caption"
 
 [tgbot.buttons]
 "closeKeyboard" = "❌ Закрыть клавиатуру"
@@ -679,6 +703,12 @@
 "getInbounds" = "🔌 Инбаунды"
 "depleteSoon" = "⚠️ Скоро конец"
 "clientUsage" = "Статистика клиента"
+"clientConnect" = "🌐 Подключиться"
+"notify" = "📢 Оповестить"
+"ios_guide" = " iOS"
+"android_guide" = "🤖 Android"
+"macos_guide" = "🍏 macOS"
+"windows_guide" = "🪟 Windows"
 "onlines" = "🟢 Онлайн"
 "commands" = "🖱️ Команды"
 "refresh" = "🔄 Обновить"
