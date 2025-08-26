@@ -2,12 +2,14 @@ package entity
 
 import (
 	"crypto/tls"
+	"math"
 	"net"
 	"strings"
 	"time"
-	"math"
 
 	"x-ui/util/common"
+
+	"gopkg.in/yaml.v3"
 )
 
 type Msg struct {
@@ -38,9 +40,10 @@ type AllSetting struct {
 	TgBotLoginNotify            bool   `json:"tgBotLoginNotify" form:"tgBotLoginNotify"`
 	TgCpu                       int    `json:"tgCpu" form:"tgCpu"`
 	TgLang                      string `json:"tgLang" form:"tgLang"`
+	TgGuideTemplate             string `json:"tgGuideTemplate" form:"tgGuideTemplate"`
 	TimeLocation                string `json:"timeLocation" form:"timeLocation"`
-	TwoFactorEnable				bool   `json:"twoFactorEnable" form:"twoFactorEnable"`
-	TwoFactorToken				string `json:"twoFactorToken" form:"twoFactorToken"`
+	TwoFactorEnable             bool   `json:"twoFactorEnable" form:"twoFactorEnable"`
+	TwoFactorToken              string `json:"twoFactorToken" form:"twoFactorToken"`
 	SubEnable                   bool   `json:"subEnable" form:"subEnable"`
 	SubTitle                    string `json:"subTitle" form:"subTitle"`
 	SubListen                   string `json:"subListen" form:"subListen"`
@@ -62,6 +65,18 @@ type AllSetting struct {
 	SubJsonMux                  string `json:"subJsonMux" form:"subJsonMux"`
 	SubJsonRules                string `json:"subJsonRules" form:"subJsonRules"`
 	Datepicker                  string `json:"datepicker" form:"datepicker"`
+}
+
+type TgGuideTemplate struct {
+	Type   string           `yaml:"type"`
+	Text   string           `yaml:"text,omitempty"`
+	FileID string           `yaml:"fileID,omitempty"`
+	Items  []MediaGroupItem `yaml:"items,omitempty"`
+}
+
+type MediaGroupItem struct {
+	Type   string `yaml:"type"`
+	FileID string `yaml:"fileID,omitempty"`
 }
 
 func (s *AllSetting) CheckValid() error {
@@ -128,6 +143,12 @@ func (s *AllSetting) CheckValid() error {
 	_, err := time.LoadLocation(s.TimeLocation)
 	if err != nil {
 		return common.NewError("time location not exist:", s.TimeLocation)
+	}
+
+	var tpl TgGuideTemplate
+	err = yaml.Unmarshal([]byte(s.TgGuideTemplate), &tpl)
+	if err != nil {
+		return common.NewErrorf("Invalid yaml filed: %v", err)
 	}
 
 	return nil

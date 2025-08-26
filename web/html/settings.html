@@ -1,22 +1,31 @@
 {{ template "page/head_start" .}}
+<link rel="stylesheet" href="{{ .base_path }}assets/codemirror/codemirror.min.css?{{ .cur_ver }}">
+<link rel="stylesheet" href="{{ .base_path }}assets/codemirror/fold/foldgutter.css">
+<link rel="stylesheet" href="{{ .base_path }}assets/codemirror/xq.min.css?{{ .cur_ver }}">
+<link rel="stylesheet" href="{{ .base_path }}assets/codemirror/lint/lint.css">
+
 <style>
   @media (min-width: 769px) {
     .ant-layout-content {
       margin: 24px 16px;
     }
   }
+
   @media (max-width: 768px) {
     .ant-tabs-nav .ant-tabs-tab {
       margin: 0;
       padding: 12px .5rem;
     }
   }
+
   .ant-tabs-bar {
     margin: 0;
   }
+
   .ant-list-item {
     display: block;
   }
+
   .alert-msg {
     color: rgb(194, 117, 18);
     font-weight: normal;
@@ -29,11 +38,13 @@
     transition: all 0.5s;
     animation: signal 3s cubic-bezier(0.18, 0.89, 0.32, 1.28) infinite;
   }
+
   .alert-msg:hover {
     cursor: default;
     transition-duration: .3s;
     animation: signal 0.9s ease infinite;
   }
+
   @keyframes signal {
     0% {
       box-shadow: 0 0 0 0 rgba(194, 118, 18, 0.5);
@@ -47,13 +58,16 @@
       box-shadow: 0 0 0 6px rgba(0, 0, 0, 0);
     }
   }
+
   .alert-msg>i {
     color: inherit;
     font-size: 24px;
   }
+
   .dark .ant-input-password-icon {
     color: var(--dark-color-text-primary);
   }
+
   .ant-collapse-content-box .ant-alert {
     margin-block-end: 12px;
   }
@@ -68,19 +82,20 @@
       <a-spin :spinning="loadingStates.spinning" :delay="500" tip='{{ i18n "loading"}}'>
         <transition name="list" appear>
           <a-alert type="error" v-if="confAlerts.length>0 && loadingStates.fetched" :style="{ marginBottom: '10px' }"
-              message='{{ i18n "secAlertTitle" }}'
-              color="red"
-              show-icon closable>
+            message='{{ i18n "secAlertTitle" }}' color="red" show-icon closable>
             <template slot="description">
               <b>{{ i18n "secAlertConf" }}</b>
-              <ul><li v-for="a in confAlerts">[[ a ]]</li></ul>
+              <ul>
+                <li v-for="a in confAlerts">[[ a ]]</li>
+              </ul>
             </template>
           </a-alert>
         </transition>
         <transition name="list" appear>
           <template>
             <a-row v-if="!loadingStates.fetched">
-              <a-card :style="{ textAlign: 'center', padding: '30px 0', marginTop: '10px', background: 'transparent', border: 'none' }">
+              <a-card
+                :style="{ textAlign: 'center', padding: '30px 0', marginTop: '10px', background: 'transparent', border: 'none' }">
                 <a-spin tip='{{ i18n "loading" }}'></a-spin>
               </a-card>
             </a-row>
@@ -90,17 +105,19 @@
                   <a-row :style="{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }">
                     <a-col :xs="24" :sm="10" :style="{ padding: '4px' }">
                       <a-space direction="horizontal">
-                        <a-button type="primary" :disabled="saveBtnDisable" @click="updateAllSetting">{{ i18n "pages.settings.save" }}</a-button>
-                        <a-button type="danger" :disabled="!saveBtnDisable" @click="restartPanel">{{ i18n "pages.settings.restartPanel" }}</a-button>
+                        <a-button type="primary" :disabled="saveBtnDisable" @click="updateAllSetting">{{ i18n
+                          "pages.settings.save" }}</a-button>
+                        <a-button type="danger" :disabled="!saveBtnDisable" @click="restartPanel">{{ i18n
+                          "pages.settings.restartPanel" }}</a-button>
                       </a-space>
                     </a-col>
                     <a-col :xs="24" :sm="14">
                       <template>
                         <div>
-                          <a-back-top :target="() => document.getElementById('content-layout')" visibility-height="200"></a-back-top>
+                          <a-back-top :target="() => document.getElementById('content-layout')"
+                            visibility-height="200"></a-back-top>
                           <a-alert type="warning" :style="{ float: 'right', width: 'fit-content' }"
-                            message='{{ i18n "pages.settings.infoDesc" }}'
-                            show-icon>
+                            message='{{ i18n "pages.settings.infoDesc" }}' show-icon>
                           </a-alert>
                         </div>
                       </template>
@@ -109,7 +126,7 @@
                 </a-card>
               </a-col>
               <a-col>
-                <a-tabs default-active-key="1">
+                <a-tabs default-active-key="1" @change="(activeKey) => { this.changePage(activeKey); }">
                   <a-tab-pane key="1" :style="{ paddingTop: '20px' }">
                     <template #tab>
                       <a-icon type="setting"></a-icon>
@@ -124,7 +141,7 @@
                     </template>
                     {{ template "settings/panel/security" . }}
                   </a-tab-pane>
-                  <a-tab-pane key="3" :style="{ paddingTop: '20px' }">
+                  <a-tab-pane key="3" :style="{ paddingTop: '20px' }" force-render="true">
                     <template #tab>
                       <a-icon type="message"></a-icon>
                       <span>{{ i18n "pages.settings.TGBotSettings" }}</span>
@@ -158,6 +175,16 @@
 <script src="{{ .base_path }}assets/qrcode/qrious2.min.js?{{ .cur_ver }}"></script>
 <script src="{{ .base_path }}assets/otpauth/otpauth.umd.min.js?{{ .cur_ver }}"></script>
 <script src="{{ .base_path }}assets/js/model/setting.js?{{ .cur_ver }}"></script>
+<script src="{{ .base_path }}assets/codemirror/codemirror.min.js?{{ .cur_ver }}"></script>
+<script src="{{ .base_path }}assets/codemirror/javascript.js"></script>
+<script src="{{ .base_path }}assets/codemirror/jshint.js"></script>
+<script src="{{ .base_path }}assets/codemirror/jsonlint.js"></script>
+<script src="{{ .base_path }}assets/codemirror/lint/lint.js"></script>
+<script src="{{ .base_path }}assets/codemirror/lint/javascript-lint.js"></script>
+<script src="{{ .base_path }}assets/codemirror/hint/javascript-hint.js"></script>
+<script src="{{ .base_path }}assets/codemirror/fold/foldcode.js"></script>
+<script src="{{ .base_path }}assets/codemirror/fold/foldgutter.js"></script>
+<script src="{{ .base_path }}assets/codemirror/fold/brace-fold.js"></script>
 {{template "component/aSidebar" .}}
 {{template "component/aThemeSwitch" .}}
 {{template "component/aSettingListItem" .}}
@@ -425,6 +452,29 @@
         updatedNoises[index] = { ...updatedNoises[index], applyTo: value };
         this.noisesArray = updatedNoises;
       },
+      changeCode() {
+        if (this.cm != null) {
+          this.cm.toTextArea();
+        }
+        textAreaObj = document.getElementById('tgGuideTemplate');
+        if (!textAreaObj) return;
+        textAreaObj.value = this.allSetting.tgGuideTemplate || '';
+
+        this.cm = CodeMirror.fromTextArea(textAreaObj, {
+          mode: 'yaml',
+          lineNumbers: true,
+          tabSize: 2,
+          theme: 'default'
+        });
+        this.cm.on('change', editor => {
+          this.allSetting.tgGuideTemplate = editor.getValue();
+        });
+      },
+      changePage(activeKey) {
+        if (activeKey == '3') {
+          this.changeCode()
+        }
+      }
     },
     computed: {
       fragment: {

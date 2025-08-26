@@ -34,6 +34,13 @@
                 </a-select>
             </template>
         </a-setting-list-item>
+        <a-setting-list-item paddings="small">
+            <template #title>{{ i18n "pages.settings.telegramGuideTemplate"}}</template>
+            <template #description>{{ i18n "pages.settings.telegramGuideTemplateDesc"}}</template>
+            <template #control>
+                 <textarea :style="{ position: 'absolute', left: '-800px' }" id="tgGuideTemplate"></textarea>
+            </template>
+        </a-setting-list-item>
     </a-collapse-panel>
     <a-collapse-panel key="2" header='{{ i18n "pages.settings.notifications" }}'>
         <a-setting-list-item paddings="small">

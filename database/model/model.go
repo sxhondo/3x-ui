@@ -20,6 +20,23 @@ const (
 	WireGuard   Protocol = "wireguard"
 )
 
+type GuideType string
+
+const (
+	PHOTO      GuideType = "photo"
+	VIDEO      GuideType = "video"
+	MEDIAGROUP GuideType = "mediagroup"
+)
+
+type OSType string
+
+const (
+	IOS     = "ios"
+	MACOS   = "macos"
+	ANDROID = "android"
+	WINDOWS = "windows"
+)
+
 type User struct {
 	Id       int    `json:"id" gorm:"primaryKey;autoIncrement"`
 	Username string `json:"username"`
@@ -90,6 +107,17 @@ type Setting struct {
 	Value string `json:"value" form:"value"`
 }
 
+type TgGuideTemplate struct {
+	Guides map[string][]GuideItem `yaml:"os-guides"`
+}
+
+type GuideItem struct {
+	Type   GuideType   `yaml:"type"`
+	Text   string      `yaml:"text,omitempty"`
+	FileID string      `yaml:"fileID,omitempty"`
+	Items  []GuideItem `yaml:"items,omitempty"` // for mediagroup type
+}
+
 type Client struct {
 	ID         string `json:"id"`
 	Security   string `json:"security"`
@@ -100,7 +128,7 @@ type Client struct {
 	TotalGB    int64  `json:"totalGB" form:"totalGB"`
 	ExpiryTime int64  `json:"expiryTime" form:"expiryTime"`
 	Enable     bool   `json:"enable" form:"enable"`
-	TgID       int64  `json:"tgId" form:"tgId"`
+	TgID       string `json:"tgId" form:"tgId"`
 	SubID      string `json:"subId" form:"subId"`
 	Comment    string `json:"comment" form:"comment"`
 	Reset      int    `json:"reset" form:"reset"`

@@ -1224,6 +1224,30 @@ func (s *InboundService) GetClientByEmail(clientEmail string) (*xray.ClientTraff
 	return nil, nil, common.NewError("Client Not Found In Inbound For Email:", clientEmail)
 }
 
+func (s *InboundService) GetClientByTgId(inboundId int, tgId int64) (*model.Client, error) {
+	inbound, err := s.GetInbound(inboundId)
+	if err != nil {
+		return nil, err
+	}
+	if inbound == nil {
+		return nil, common.NewError("Inbound Not Found For TgId:", tgId)
+	}
+
+	clients, err := s.GetClients(inbound)
+	if err != nil {
+		return nil, err
+	}
+
+	tgIDStr := strconv.FormatInt(tgId, 10)
+	logger.Debugf("Searching %s in %+v", tgIDStr, clients)
+	for _, client := range clients {
+		if client.TgID == tgIDStr {
+			return &client, nil
+		}
+	}
+	return nil, nil
+}
+
 func (s *InboundService) SetClientTelegramUserID(trafficId int, tgId int64) (bool, error) {
 	traffic, inbound, err := s.GetClientInboundByTrafficID(trafficId)
 	if err != nil {
@@ -1735,7 +1759,7 @@ func (s *InboundService) GetClientTrafficTgBot(tgId int64) ([]*xray.ClientTraffi
 	var inbounds []*model.Inbound
 
 	// Retrieve inbounds where settings contain the given tgId
-	err := db.Model(model.Inbound{}).Where("settings LIKE ?", fmt.Sprintf(`%%"tgId": %d%%`, tgId)).Find(&inbounds).Error
+	err := db.Model(model.Inbound{}).Where("settings LIKE ?", fmt.Sprintf(`%%"tgId": "%d"%%`, tgId)).Find(&inbounds).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		logger.Errorf("Error retrieving inbounds with tgId %d: %v", tgId, err)
 		return nil, err
@@ -1749,7 +1773,7 @@ func (s *InboundService) GetClientTrafficTgBot(tgId int64) ([]*xray.ClientTraffi
 			continue
 		}
 		for _, client := range clients {
-			if client.TgID == tgId {
+			if client.TgID == strconv.FormatInt(tgId, 10) {
 				emails = append(emails, client.Email)
 			}
 		}
