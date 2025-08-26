@@ -461,10 +461,25 @@
         textAreaObj.value = this.allSetting.tgGuideTemplate || '';
 
         this.cm = CodeMirror.fromTextArea(textAreaObj, {
-          mode: 'yaml',
           lineNumbers: true,
+          mode: "application/yaml",
+          lint: true,
+          styleActiveLine: true,
+          matchBrackets: true,
+          theme: "xq",
+          autoCloseTags: true,
+          lineWrapping: true,
+          indentUnit: 2,
+          indentWithTabs: true,
+          smartIndent: true,
           tabSize: 2,
-          theme: 'default'
+          lineWiseCopyCut: false,
+          foldGutter: true,
+          gutters: [
+            "CodeMirror-lint-markers",
+            "CodeMirror-linenumbers",
+            "CodeMirror-foldgutter",
+          ],
         });
         this.cm.on('change', editor => {
           this.allSetting.tgGuideTemplate = editor.getValue();
