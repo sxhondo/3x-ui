@@ -458,7 +458,7 @@ func (t *Tgbot) OnReceive() {
 					Email:      email,
 					LimitIP:    0,
 					TotalGB:    0,
-					ExpiryTime: time.Now().AddDate(0, 0, 14).UnixMilli(),
+					ExpiryTime: time.Now().AddDate(0, 0, 7).UnixMilli(),
 					Enable:     true,
 					TgID:       strconv.FormatInt(message.From.ID, 10),
 					SubID:      t.randomLowerAndNum(16),
