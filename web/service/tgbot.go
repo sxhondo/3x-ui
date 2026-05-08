@@ -433,20 +433,17 @@ func (t *Tgbot) OnReceive() {
 			case "awaiting_notify_message":
 				delete(userStates, message.Chat.ID)
 				if checkAdmin(message.From.ID) {
-					msg := strings.TrimSpace(message.Text)
-					chats, err := t.settingService.getString("notifyList")
+					chats, err := t.inboundService.GetClientsTgIds(1)
 					if err != nil {
 						t.SendMsgToTgbot(message.Chat.ID, err.Error())
 					} else {
-						for _, chatIDStr := range strings.Split(chats, ",") {
-							chatID, err := strconv.ParseInt(chatIDStr, 10, 64)
-							if err != nil {
-								logger.Warning(err)
-							} else {
+						msg := strings.TrimSpace(message.Text)
+						go func() {
+							for _, chatID := range chats {
 								t.SendMsgToTgbot(chatID, msg)
+								time.Sleep(500 * time.Millisecond)
 							}
-							time.Sleep(500 * time.Millisecond)
-						}
+						}()
 					}
 				}
 			case "awaiting_client_email":
@@ -2092,7 +2089,7 @@ func (t *Tgbot) SendMediaGroup(chatID int64, items []model.GuideItem, caption st
 	media := make([]telego.InputMedia, 0, len(items))
 	for i, item := range items {
 		capt := ""
-		if (i == 0 && caption != "") {
+		if i == 0 && caption != "" {
 			capt = caption
 		}
 		var im telego.InputMedia

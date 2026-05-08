@@ -1248,6 +1248,29 @@ func (s *InboundService) GetClientByTgId(inboundId int, tgId int64) (*model.Clie
 	return nil, nil
 }
 
+func (s *InboundService) GetClientsTgIds(inboundID int) ([]int64, error) {
+	inbound, err := s.GetInbound(inboundID)
+	if err != nil {
+		return nil, err
+	}
+	if inbound == nil {
+		return nil, common.NewError("Can't find inbound: ", inboundID)
+	}
+
+	clients, err := s.GetClients(inbound)
+	if err != nil {
+		return nil, err
+	}
+
+	var result []int64
+	for _, client := range clients {
+		tgIDInt, _ := strconv.ParseInt(client.TgID, 10, 64)
+		result = append(result, tgIDInt)
+	}
+
+	return result, nil
+}
+
 func (s *InboundService) SetClientTelegramUserID(trafficId int, tgId int64) (bool, error) {
 	traffic, inbound, err := s.GetClientInboundByTrafficID(trafficId)
 	if err != nil {
