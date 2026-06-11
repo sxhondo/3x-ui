@@ -581,6 +581,21 @@ func (t *Tgbot) OnReceive() {
 					t.SendMsgToTgbotDeleteAfter(message.Chat.ID, t.I18nBot("tgbot.messages.userSaved"), 3, tu.ReplyKeyboardRemove())
 					delete(userStates, message.Chat.ID)
 					t.addClient(message.Chat.ID, t.BuildClientDraftMessage())
+				case "awaiting_notify_message":
+					delete(userStates, message.Chat.ID)
+					if checkAdmin(message.From.ID) {
+						msg := strings.TrimSpace(message.Text)
+						clients, _ := t.clientService.List()
+						count := 0
+						for _, c := range clients {
+							if c.TgID == 0 {
+								continue
+							}
+							t.SendMsgToTgbot(c.TgID, msg)
+							count++
+						}
+						t.SendMsgToTgbot(message.Chat.ID, fmt.Sprintf("Отправлено %d/%d", count, len(clients)))
+					}
 				}
 
 			} else {
@@ -1952,6 +1967,10 @@ func (t *Tgbot) answerCallback(callbackQuery *telego.CallbackQuery, isAdmin bool
 			t.SendMsgToTgbot(chatId, msg, tu.ReplyKeyboardRemove())
 
 		}
+	case "notify":
+		t.SendMsgToTgbot(chatId, t.I18nBot("tgbot.messages.notify_message_prompt"))
+		userStates[chatId] = "awaiting_notify_message"
+		t.sendCallbackAnswerTgBot(callbackQuery.ID, t.I18nBot("tgbot.answers.successfulOperation"))
 	default:
 		if after, ok := strings.CutPrefix(callbackQuery.Data, "client_sub_links "); ok {
 			email := after
@@ -2120,6 +2139,10 @@ func (t *Tgbot) SendAnswer(chatId int64, msg string, isAdmin bool) {
 			tu.InlineKeyboardButton(t.I18nBot("pages.settings.subSettings")).WithCallbackData(t.encodeQuery("admin_client_sub_links")),
 			tu.InlineKeyboardButton(t.I18nBot("subscription.individualLinks")).WithCallbackData(t.encodeQuery("admin_client_individual_links")),
 			tu.InlineKeyboardButton(t.I18nBot("qrCode")).WithCallbackData(t.encodeQuery("admin_client_qr_links")),
+		),
+		tu.InlineKeyboardRow(
+			tu.InlineKeyboardButton(t.I18nBot("tgbot.buttons.notify")).WithCallbackData(t.encodeQuery("notify")),
+			tu.InlineKeyboardButton(t.I18nBot("tgbot.buttons.connect")).WithCallbackData(t.encodeQuery("connect")),
 		),
 		// TODOOOOOOOOOOOOOO: Add restart button here.
 	)
